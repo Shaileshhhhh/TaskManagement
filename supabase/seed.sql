@@ -4,10 +4,17 @@
 -- 'password123' for both users. Do NOT run this against production.
 
 -- Two test users -------------------------------------------------------------
+-- NOTE: GoTrue (Supabase Auth) requires the token bookkeeping columns
+-- (confirmation_token, recovery_token, email_change*, phone_change*,
+-- reauthentication_token) to be EMPTY STRINGS, not NULL. Leaving them NULL makes
+-- login fail with "Database error querying schema" (500). We set them to '' here.
 insert into auth.users (
   id, instance_id, aud, role, email,
   encrypted_password, email_confirmed_at, created_at, updated_at,
-  raw_app_meta_data, raw_user_meta_data
+  raw_app_meta_data, raw_user_meta_data,
+  confirmation_token, recovery_token, email_change,
+  email_change_token_new, email_change_token_current,
+  phone_change, phone_change_token, reauthentication_token
 )
 values
   (
@@ -16,7 +23,8 @@ values
     'authenticated', 'authenticated', 'alice@example.com',
     crypt('password123', gen_salt('bf')), now(), now(), now(),
     '{"provider":"email","providers":["email"]}',
-    '{"full_name":"Alice Tester"}'
+    '{"full_name":"Alice Tester"}',
+    '', '', '', '', '', '', '', ''
   ),
   (
     '22222222-2222-2222-2222-222222222222',
@@ -24,7 +32,8 @@ values
     'authenticated', 'authenticated', 'bob@example.com',
     crypt('password123', gen_salt('bf')), now(), now(), now(),
     '{"provider":"email","providers":["email"]}',
-    '{"full_name":"Bob Tester"}'
+    '{"full_name":"Bob Tester"}',
+    '', '', '', '', '', '', '', ''
   )
 on conflict (id) do nothing;
 

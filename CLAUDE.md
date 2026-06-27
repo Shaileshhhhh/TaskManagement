@@ -36,7 +36,18 @@ Roles/permissions · manager attendance views · file uploads (links only) · re
   `types/database.types.ts` hand-authored to match the live schema (cross-checked column-by-column)
   — REGENERATE with `supabase gen types typescript --local` once Docker/Podman is available
   (the CLI always spawns a container, so it cannot run in this environment).
-- **Env status:** `.env.local` has the Supabase URL + publishable (anon) key. Still MISSING:
-  `SUPABASE_SERVICE_ROLE_KEY` (needed for Phase 2 admin client + Phase 8 Edge Functions) and
-  `RESEND_API_KEY` (Phase 8). DB password for migrations: `Taskco@passwor`.
-- Next: Phase 2 — Supabase clients (browser/server/admin) + API scaffolding (withAuth, envelope, errors).
+- **Phase 2 — Supabase clients + API scaffolding: DONE.** lib/supabase/{client,server,middleware,admin}.ts,
+  root middleware.ts (session refresh + page guard; API routes excluded so they 401-JSON instead of redirect),
+  lib/api/{errors,response,handler}.ts (withAuth → 401 if no user, Zod-validate params/query/body before DB,
+  central { error } envelope), lib/validations/common.ts (base Zod). Throwaway probe at /api/health-check.
+  VERIFIED live: no session → 401 { error }, valid cookie session → 200 { data, userId } as seeded Alice.
+- **Seed fix (Phase 2):** GoTrue requires auth.users token columns (confirmation_token, recovery_token,
+  email_change*, phone_change*, reauthentication_token) to be '' not NULL — NULL caused login 500
+  "Database error querying schema". seed.sql patched + live rows fixed. Seeded users:
+  alice@example.com / bob@example.com, password `password123`.
+- **Env status:** `.env.local` has Supabase URL + publishable (anon) key. Still MISSING:
+  `SUPABASE_SERVICE_ROLE_KEY` (admin client at runtime + Phase 8) and `RESEND_API_KEY` (Phase 8).
+  DB password (migrations): `Taskco@passwor`. NOTE: App Router treats `_name` folders as private
+  (non-routable) — never name a route folder with a leading underscore.
+- Next: Phase 3 — Auth (login/register/forgot/reset/verify pages, auth/callback + confirm routes,
+  auth-guarded (app)/layout.tsx). This is the "MODULE 5 — Auth Reference Card" stopping line.
