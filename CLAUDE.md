@@ -29,5 +29,14 @@ Roles/permissions · manager attendance views · file uploads (links only) · re
 - **Phase 0 — Bootstrap: DONE.** Next.js + TS + Tailwind + shadcn (button added), Lucide,
   `supabase init`, full §5 folder tree, `.env.example` + `.env.local` (server-only keys flagged),
   ESLint admin-import guard (verified firing), strict tsconfig, `.gitignore`.
-- Next: Phase 1 — Database (migrations, RLS, triggers, views, RPC, generated types).
-  **[You do this]** before Phase 1: create a Supabase project and fill `.env.local`.
+- **Phase 1 — Database: DONE.** 5 ordered migrations (enums → tables → functions/triggers
+  → RLS → views/RPC) + seed, all applied to the live Supabase project
+  (`hfapvclyxtakhtvpckvk`). Verified: 11 tables all RLS-enabled, 35 policies, `handle_new_user`
+  trigger creates profiles, views + `get_my_dashboard` RPC work, activity/notify triggers attached.
+  `types/database.types.ts` hand-authored to match the live schema (cross-checked column-by-column)
+  — REGENERATE with `supabase gen types typescript --local` once Docker/Podman is available
+  (the CLI always spawns a container, so it cannot run in this environment).
+- **Env status:** `.env.local` has the Supabase URL + publishable (anon) key. Still MISSING:
+  `SUPABASE_SERVICE_ROLE_KEY` (needed for Phase 2 admin client + Phase 8 Edge Functions) and
+  `RESEND_API_KEY` (Phase 8). DB password for migrations: `Taskco@passwor`.
+- Next: Phase 2 — Supabase clients (browser/server/admin) + API scaffolding (withAuth, envelope, errors).
