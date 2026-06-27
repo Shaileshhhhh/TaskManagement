@@ -49,5 +49,19 @@ Roles/permissions · manager attendance views · file uploads (links only) · re
   `SUPABASE_SERVICE_ROLE_KEY` (admin client at runtime + Phase 8) and `RESEND_API_KEY` (Phase 8).
   DB password (migrations): `Taskco@passwor`. NOTE: App Router treats `_name` folders as private
   (non-routable) — never name a route folder with a leading underscore.
-- Next: Phase 3 — Auth (login/register/forgot/reset/verify pages, auth/callback + confirm routes,
-  auth-guarded (app)/layout.tsx). This is the "MODULE 5 — Auth Reference Card" stopping line.
+- **Phase 3 — Auth: DONE (trimmed to PDF scope).** login + register pages only, auth/callback
+  (code exchange), auth-guarded (app)/layout.tsx (server guard + sidebar/topbar + sign-out),
+  dashboard placeholder, root redirect. lib/validations/auth.ts (login/register schemas).
+  VERIFIED: prod build green; unauth /dashboard → 307 /login; cookie session → /dashboard 200
+  showing seeded Alice's profile.
+  **SCOPE DECISION (user):** PDF out-of-scope list wins for auth → NO email verification,
+  password reset, or OAuth. Removed forgot-password/reset-password/verify-email pages +
+  auth/confirm route. Register signs in immediately (no verify step).
+- **[You do this] — REQUIRED for register to work:** In Supabase Auth settings, turn email
+  confirmations **OFF** (Authentication → Providers → Email → disable "Confirm email", i.e.
+  mailer_autoconfirm = true). Currently it is ON (mailer_autoconfirm=false), so signUp tries to
+  send a confirmation email and login of unconfirmed users is rejected. Seeded users
+  (alice/bob@example.com, password `password123`) are already confirmed and can log in now.
+- **Stopping line reached:** "MODULE 5 — Auth Reference Card" maps to docs Phase 3. Phases 0–3 done.
+- Remaining docs phases (NOT in this milestone): 4 Projects · 5 Tasks · 6 Attendance · 7 Calendar
+  · 8 Notifications/Activity · 9 Dashboard · 10 Cross-cutting.
