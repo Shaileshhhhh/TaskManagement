@@ -62,6 +62,12 @@ Roles/permissions · manager attendance views · file uploads (links only) · re
   mailer_autoconfirm = true). Currently it is ON (mailer_autoconfirm=false), so signUp tries to
   send a confirmation email and login of unconfirmed users is rejected. Seeded users
   (alice/bob@example.com, password `password123`) are already confirmed and can log in now.
-- **Stopping line reached:** "MODULE 5 — Auth Reference Card" maps to docs Phase 3. Phases 0–3 done.
+- **Tests (auth milestone): DONE.** Vitest 4. `npm test` (also test:unit / test:integration / test:watch).
+  Unit (tests/unit): auth Zod schemas, API envelope + error helpers (19 tests). Integration
+  (tests/integration): live Supabase login success/failure (wrong password, non-existent email,
+  token→getUser) + register probe that adapts to the confirmation setting (7 tests). 26/26 green.
+  Config: vitest.config.ts (node env, vite-tsconfig-paths), tests/setup.ts loads .env.local.
+  NOTE: did NOT install @vitejs/plugin-react (Babel 7/8 peer conflict) — not needed for logic/auth tests.
+- **Stopping line reached:** "MODULE 5 — Auth Reference Card" maps to docs Phase 3. Phases 0–3 + auth tests done.
 - Remaining docs phases (NOT in this milestone): 4 Projects · 5 Tasks · 6 Attendance · 7 Calendar
   · 8 Notifications/Activity · 9 Dashboard · 10 Cross-cutting.
